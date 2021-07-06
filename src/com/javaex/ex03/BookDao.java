@@ -20,6 +20,8 @@ public class BookDao {
 	private String id = "webdb";
 	private String pw = "webdb";
 
+	List<BookVo> bookList = new ArrayList<BookVo>();
+	
 	// DB연결
 	private void getConnection() {
 		try {
@@ -54,7 +56,61 @@ public class BookDao {
 			System.out.println("error:" + e);
 		}
 	}
+	
+	// Search
+		public List<BookVo> bookSearch(String word) {
 
+			
+			
+			getConnection();
+			
+			try {
+				// 3. SQL문 준비 / 바인딩 / 실행
+				String query = "";
+				query += " select b.book_id, ";
+				query += "        b.title, ";
+				query += "        b.pubs, ";
+				query += "        to_char(b.pub_date,'yyyy-mm-dd'), ";
+				query += "        b.author_id, ";
+				query += "        a.author_name, ";
+				query += "        a.author_desc ";
+				query += " from author a, book b ";
+				query += " where a.author_id = b.author_id ";
+				query += " and (author_name like '%"+word+"%' ";
+				query += " 	    or title like '%"+word+"%' ";
+				query += " 		or pubs like '%"+word+"%'";
+				query += " 		or author_desc like '%"+word+"%') ";
+				query += " order by book_id asc";
+				
+				pstmt = conn.prepareStatement(query);
+				
+				rs = pstmt.executeQuery();
+				
+				// 4.결과처리
+				while (rs.next()) {
+					int book_id = rs.getInt("book_id");
+					String title = rs.getString("title");
+					String pubs = rs.getString("pubs");
+					String pub_date = rs.getString("to_char(b.pub_date,'yyyy-mm-dd')");
+					int author_id = rs.getInt("author_id");
+					String author_name = rs.getString("author_name");
+					String author_desc = rs.getString("author_desc");
+
+					BookVo bookVo = new BookVo(book_id, title, pubs, pub_date, author_id, author_name, author_desc);
+
+					bookList.add(bookVo);
+				}
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+			close();
+
+			return bookList;
+
+		}
+	
 	// Delete
 	public int bookDelete(int book_id) {
 		int count = -1;
@@ -162,7 +218,6 @@ public class BookDao {
 		// DB값을 가져와서 ArrayList로 전달
 
 		// 리스트 생성
-		List<BookVo> bookList = new ArrayList<BookVo>();
 
 		
 		getConnection();
@@ -209,5 +264,6 @@ public class BookDao {
 		return bookList;
 
 	}
+
 
 }

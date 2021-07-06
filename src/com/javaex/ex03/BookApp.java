@@ -1,10 +1,14 @@
 package com.javaex.ex03;
 
 import java.util.List;
+import java.util.Scanner;
 
 public class BookApp {
 
 	public static void main(String[] args) {
+		
+		Scanner sc = new Scanner(System.in);
+		String word = sc.next();
 		
 		// 작가테이블 책테이블 완성
 		// 작가테이블 시퀀스, 책테이블 시퀀스 완성
@@ -16,10 +20,11 @@ public class BookApp {
 		BookDao bookDao = new BookDao();
 		List<BookVo> BookList;
 
+		// 출력
 		BookList = bookDao.BookList();
 		printList(BookList);
 
-		// 작가등록
+		// 등록
 		BookVo iBookVo = new BookVo("삼국지","마로니에","2002-06-07", 1);
 		int iCount = bookDao.bookInsert(iBookVo);
 		if (iCount > 0) {
@@ -28,14 +33,16 @@ public class BookApp {
 			System.out.println("[관리자에게 문의하세요(" + iCount + ")]");
 		}
 
-		// 작가수정
+		// 수정
 		int uCount = bookDao.bookUpdate("노인과바다","몰라","2021-07-05",8);
 
-		// 작가삭제
+		// 삭제
 		int dCount = bookDao.bookDelete(9);
 		
 		// 검색
-
+		printList(bookDao.bookSearch(word));
+		
+		sc.close();
 
 	}
 

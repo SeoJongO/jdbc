@@ -19,13 +19,6 @@ public class BookVo {
 		this.pub_date = pub_date;
 		this.author_id = author_id;
 	}
-	
-	public void BookVo1(String title, String pubs, String pub_date, int book_id) {
-		this.title = title;
-		this.pubs = pubs;
-		this.pub_date = pub_date;
-		this.book_id = book_id;
-	}
 
 	public BookVo(int book_id, String title, String pubs, String pub_date, int author_id, String author_name,
 			String author_desc) {
